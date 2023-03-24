@@ -27,9 +27,13 @@ import race_ext_builder as builder
 
 def get_cli_arguments():
     """Parse command-line arguments to the script"""
-    parser = builder.get_arg_parser("json-c", "0.15-20200726", 1, __file__, [
-        builder.TARGET_ANDROID_x86_64, builder.TARGET_ANDROID_arm64_v8a
-    ])
+    parser = builder.get_arg_parser(
+        "json-c",
+        "0.15-20200726",
+        1,
+        __file__,
+        [builder.TARGET_ANDROID_x86_64, builder.TARGET_ANDROID_arm64_v8a],
+    )
     return builder.normalize_args(parser.parse_args())
 
 
@@ -48,24 +52,30 @@ if __name__ == "__main__":
     env = builder.create_standard_envvars(args)
 
     logging.root.info("Configuring build")
-    builder.execute(args, [
-        "cmake",
-        f"-H{source_dir}",
-        f"-B{args.build_dir}",
-        f"-DCMAKE_TOOLCHAIN_FILE={os.environ['ANDROID_NDK']}/{args.target}.toolchain.cmake",
-    ])
+    builder.execute(
+        args,
+        [
+            "cmake",
+            f"-H{source_dir}",
+            f"-B{args.build_dir}",
+            f"-DCMAKE_TOOLCHAIN_FILE={os.environ['ANDROID_NDK']}/{args.target}.toolchain.cmake",
+        ],
+    )
 
     logging.root.info("Building")
-    builder.execute(args, [
-        "cmake",
-        "--build",
-        args.build_dir,
-        "--target",
-        "install",
-        "--",
-        "-j",
-        args.num_threads,
-        f"DESTDIR={args.install_dir}"
-    ])
+    builder.execute(
+        args,
+        [
+            "cmake",
+            "--build",
+            args.build_dir,
+            "--target",
+            "install",
+            "--",
+            "-j",
+            args.num_threads,
+            f"DESTDIR={args.install_dir}",
+        ],
+    )
 
     builder.create_package(args, "/usr/local")
