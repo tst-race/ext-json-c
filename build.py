@@ -27,7 +27,9 @@ import race_ext_builder as builder
 
 def get_cli_arguments():
     """Parse command-line arguments to the script"""
-    parser = builder.get_arg_parser("json-c", "0.15-20200726", 1, __file__)
+    parser = builder.get_arg_parser("json-c", "0.15-20200726", 1, __file__, [
+        builder.TARGET_ANDROID_x86_64, builder.TARGET_ANDROID_arm64_v8a
+    ])
     return builder.normalize_args(parser.parse_args())
 
 
